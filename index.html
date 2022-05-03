@@ -21,10 +21,39 @@
           bottom: 0;
           right: 0;
         }
+        #searchbox {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          top: 0;
+          overflow: scroll;
+          z-index: 2;
+          background-color: white;
+          display: none;
+          padding: 1em;
+          border: 2px solid black;
+        }
+        #searchbox a {
+          display: block;
+          color: black;
+          text-decoration: none;
+        }
+        #searchboxopener {
+          position: absolute;
+          bottom: 10px;
+          left: 10px;
+          overflow: scroll;
+          z-index: 2;
+          padding: 0.5em;
+          cursor: pointer;
+        }
       </style>
     </head>
     <body>
         <div id="openseadragon1"></div>
+        <div id="searchbox"></div>
+        <div id="searchboxopener">🔍</div>
+        <script src="blogs.js"></script>
         <script src="openseadragon/openseadragon.min.js"></script>
         <script type="text/javascript">
             var viewer = OpenSeadragon({
@@ -47,6 +76,24 @@
                     }
                 }
             });
+            var searchBox = document.getElementById("searchbox");
+            var searchBoxOpener = document.getElementById("searchboxopener");
+            searchBoxOpener.onclick = function() {
+              searchBox.style.display = "block";
+              searchBoxOpener.style.display = "none";
+            }
+            for (const blog in blogs) {
+              const child = document.createElement("a");
+              child.href="#";
+              child.textContent = blog;
+              child.onclick = function() {
+                viewer.viewport.panTo(new OpenSeadragon.Point(blogs[blog][0], blogs[blog][1]));
+                viewer.viewport.zoomTo(19);
+                searchBox.style.display = "none";
+                searchBoxOpener.style.display = "block";
+              }
+              searchBox.appendChild(child);
+            }
         </script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
